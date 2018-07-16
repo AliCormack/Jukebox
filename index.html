@@ -8,13 +8,14 @@
   <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script>
 
     var player;
 
     window.onSpotifyWebPlaybackSDKReady = () => 
     {
-      const token = 'BQAIMG_bEpHnT4UV7jNJoXV9REJ1LO0O6OGXZbi0hghpHjz4DkIvVOqKMSdfRl9d2rTzIlCkELttfJN3-_8TOHRqcujev6C3c29K_ypytYeX9qSdwMFg9ifR1bz0zdJbqCO2pFRCq-e5n9onEvJQ1C5LPrpx9z7qs28K';
+      const token = 'BQBxRiiIufpE9PTv1NPfvImjNtUSH-XdJb5Jhl8_WP5051OuUoRlkJ8A1Anhd2aOU9IxqFmQ9_9rp2S2U-59Fq7YGjbd7_IPUr5QdEvYYsaiXavQ1-TUEgxK76jIcwMBJNOPOxPKlqD0TOR55otziFh-3e0wqZyLnwSx';
       player = new Spotify.Player({
         name: 'Jukebox',
         getOAuthToken: cb => { cb(token); }
@@ -73,8 +74,17 @@
         });
       };
 
-
-      
+      var searchAlbums = function (query) {
+        $.ajax({
+            url: 'http://api.spotify.com/v1/search',
+            data: {
+                q: query,
+            },
+            crossDomain: true,
+            dataType: 'jsonp'
+        });
+    };
+    
 
   function Play()
   {
@@ -84,9 +94,16 @@
       });
   }
 
+  function Search()
+  {
+    Search("pie");
+  }
+
   </script>
 
-<button onclick="Play()">Click me</button>
+<button onclick="Play()">Play</button>
+
+<button onclick="searchAlbums('pie');">Search</button>
 
 </body>
 </html>
