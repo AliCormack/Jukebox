@@ -103,6 +103,8 @@ app.get('/callback', function(req, res) {
           console.log(body);
         });
 
+        access_token = body.access_token;
+
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({
@@ -141,6 +143,23 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+});
+
+// Client-Server stuff
+
+app.post('/domaintest', function(req, res, next) 
+{
+  var obj = {};
+        console.log('body: ' + JSON.stringify(req.body));
+        res.send(req.body);
+});
+
+app.post('/login', function(req, res, next) 
+{
+  console.log('login: ' + JSON.stringify(req.body));
+  res.body = access_token;
+  console.log(access_token);
+  res.send(access_token);
 });
 
 console.log('Listening on 8888');

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Client</title>
+    
+    <style type="text/css">
+      #login, #loggedin {
+        display: none;
+      }
+      .text-overflow {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 500px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <button id="test">Test</button>    
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script>
+
+        document.getElementById('test').addEventListener('click', function(e) {
+            
+            e.preventDefault();
+
+            var data = {};
+            data.title = "title";
+            data.message = "message";
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: 'http://localhost:8888/login',
+                success: function (data) 
+                {
+                    console.log(JSON.stringify(data));
+                }
+            });
+
+          }, false);
+
+    </script>
+  </body>
+</html>
+
