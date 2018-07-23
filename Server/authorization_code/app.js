@@ -12,6 +12,9 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var Spotify = require('spotify-web-api-js');
+var spotifyAPI = new Spotify();
 
 var client_id = 'ac67c1b5ebd746e7b8d075b0b30502e7'; // Your client id
 var client_secret = 'a547877572954f33bf887c0f600a69f3'; // Your secret
@@ -42,6 +45,8 @@ app.use(express.static(__dirname + '/public'))
 
 app.get('/login', function(req, res) {
 
+  console.log(2);
+
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -66,6 +71,8 @@ app.get('/callback', function(req, res) {
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
 
+  console.log("callback");
+
   if (state === null || state !== storedState) {
     res.redirect('/#' +
       querystring.stringify({
@@ -86,6 +93,8 @@ app.get('/callback', function(req, res) {
       json: true
     };
 
+    console.log(1);
+
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
 
@@ -103,7 +112,8 @@ app.get('/callback', function(req, res) {
           console.log(body);
         });
 
-        access_token = body.access_token;
+        spotifyAPI.setAccessToken(access_token);
+        console.log("SET TOKEN");
 
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
@@ -138,6 +148,10 @@ app.get('/refresh_token', function(req, res) {
   request.post(authOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
+
+      spotifyAPI.setAccessToken(access_token);
+      console.log("SET TOEKN");
+
       res.send({
         'access_token': access_token
       });
@@ -147,19 +161,29 @@ app.get('/refresh_token', function(req, res) {
 
 // Client-Server stuff
 
-app.post('/domaintest', function(req, res, next) 
+app.post('/login', function(req, res, next) 
 {
   var obj = {};
         console.log('body: ' + JSON.stringify(req.body));
         res.send(req.body);
 });
 
-app.post('/login', function(req, res, next) 
+app.post('/search/:terms', function(req, res, next) 
 {
-  console.log('login: ' + JSON.stringify(req.body));
-  res.body = access_token;
-  console.log(access_token);
-  res.send(access_token);
+  console.log(req.body);
+  console.log(req.data);
+  console.log(req.params);
+
+  spotifyAPI.searchTracks(req.params.terms, function(err, data) {
+    if (err)
+    {
+      console.error(err);
+    }
+    else 
+    {
+      res.send(data);
+    }
+  });
 });
 
 console.log('Listening on 8888');

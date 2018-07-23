@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Server2</title>  
+  </head>
+
+  <body> 
+
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="https://spotify-player.herokuapp.com/spotify-player.js"></script>
+
+    <script>
+
+        var spotifyPlayer = new SpotifyPlayer();
+
+        spotifyPlayer.on('update', response => {
+        // render the track received
+        });
+
+        spotifyPlayer.on('login', user => {
+        if (user === null) {
+            // no user
+        } else {
+            // say hello to the user, and tell them to play something!
+        }
+        });
+
+        spotifyPlayer.init();
+
+        spotifyPlayer.login();
+
+    </script>
+  </body>
+</html>
+
